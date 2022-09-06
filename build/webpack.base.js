@@ -36,8 +36,9 @@ module.exports = {
           "babel-loader",
         ],
       },
+      //解析 css 文件
       {
-        test: /.css$/, //匹配所有的 css 文件
+        test: /.css$/,
         include: path.resolve(__dirname, "../src"),
         use: [
           isDev ? "style-loader" : MiniCssExtractPlugin.loader, // 开发环境使用style-loader,打包模式抽离css
@@ -45,8 +46,9 @@ module.exports = {
           "postcss-loader",
         ],
       },
+      // 解析 less 文件
       {
-        test: /.less$/, //匹配所有的 less 文件
+        test: /.less$/,
         include: path.resolve(__dirname, "../src"),
         use: [
           isDev ? "style-loader" : MiniCssExtractPlugin.loader,
@@ -55,7 +57,17 @@ module.exports = {
           "less-loader",
         ],
       },
-
+      // 解析 sass 文件
+      {
+        test: /\.s[ac]ss$/i,
+        include: path.resolve(__dirname, "../src"),
+        use: [
+          isDev ? "style-loader" : MiniCssExtractPlugin.loader,
+          "css-loader",
+          "postcss-loader",
+          "less-loader",
+        ],
+      },
       // 解析图片文件
       {
         test: /.(png|jpg|jpeg|gif|svg|ico)$/, // 匹配图片文件

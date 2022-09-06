@@ -1,6 +1,6 @@
 import React, { lazy, Suspense, useState } from "react";
 const LazyDemo = lazy(() => import("./components/lazyDemo")); // 使用import语法配合react的Lazy动态引入资源
-
+import './app.scss'
 function App() {
   const [show, setShow] = useState(false);
 
