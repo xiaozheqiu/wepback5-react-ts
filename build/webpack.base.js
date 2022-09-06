@@ -3,6 +3,8 @@ const HtmlWebpackPlugin = require("html-webpack-plugin"); // 把最终构建好�
 const isDev = process.env.NODE_ENV === "development"; // 是否是开发模式
 const MiniCssExtractPlugin = require("mini-css-extract-plugin"); // css抽离到单文件
 console.log(isDev, "isDev");
+const WebpackBar = require("webpackbar"); // 展示打包进度条
+const FriendlyErrorsWebpackPlugin = require("friendly-errors-webpack-plugin"); // 优化控制台输出
 
 module.exports = {
   // 配置入口文件
@@ -36,23 +38,19 @@ module.exports = {
           "babel-loader",
         ],
       },
-      //解析 css 文件
-      {
-        test: /.css$/,
-        include: path.resolve(__dirname, "../src"),
-        use: [
-          isDev ? "style-loader" : MiniCssExtractPlugin.loader, // 开发环境使用style-loader,打包模式抽离css
-          "css-loader",
-          "postcss-loader",
-        ],
-      },
       // 解析 less 文件
       {
         test: /.less$/,
         include: path.resolve(__dirname, "../src"),
         use: [
           isDev ? "style-loader" : MiniCssExtractPlugin.loader,
-          "css-loader",
+          {
+            loader: "css-loader",
+            options: {
+              modules: true,
+              importLoaders: 1,
+            },
+          },
           "postcss-loader",
           "less-loader",
         ],
@@ -62,10 +60,16 @@ module.exports = {
         test: /\.s[ac]ss$/i,
         include: path.resolve(__dirname, "../src"),
         use: [
-          isDev ? "style-loader" : MiniCssExtractPlugin.loader,
-          "css-loader",
+          isDev ? "style-loader" : MiniCssExtractPlugin.loader, // 开发环境使用style-loader,打包模式抽离css
+          {
+            loader: "css-loader",
+            options: {
+              modules: true,
+              importLoaders: 1,
+            },
+          },
           "postcss-loader",
-          "less-loader",
+          "sass-loader",
         ],
       },
       // 解析图片文件
@@ -114,6 +118,7 @@ module.exports = {
       template: path.resolve(__dirname, "../public/index.html"), // 模板取定义root节点的模板
       inject: true, // 自动注入静态资源
     }),
+    new WebpackBar(),
   ],
 };
 
